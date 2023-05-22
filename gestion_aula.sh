@@ -1,5 +1,11 @@
 #!/bin/bash
+# Importar configuración
 source .config
+
+# Importar funciones que implementación acciones
+for f in accion_*.sh; do
+    source "$f"
+done
 
 # Provoca que el script termine si se usa una variable no declarada
 set -u
@@ -128,159 +134,6 @@ function solicitar_hosts() {
     else
         HOSTS=("-H" "$hosts")
     fi
-}
-
-function accion_00_salir() {
-    exit 0
-}
-
-function accion_98_generar_clave_y_copiar() {
-    solicitar_hosts
-    local linea
-    local usuario
-    local host
-    local puerto
-    local comando
-
-    if [[ ${HOSTS[0]} == "-h" ]]; then
-        comando="mostrar_hosts_fichero ${HOSTS[1]}"
-    else
-        HOSTS[0]=""
-        comando="echo ${HOSTS[*]}"
-    fi
-
-    ssh-keygen -t rsa
-    for linea in $($comando)
-    do
-        usuario=""
-        host=""
-        puerto=""
-        [[ $linea =~ "@" ]] && usuario=${linea/@*/}
-        usuario=${usuario:-root}
-        host=${linea/*@/}
-        host=${host/:*/}
-        [[ $linea =~ ":" ]] && puerto=${linea##*:}
-        puerto=${puerto:-22}
-        ssh-copy-id -i ~/.ssh/id_rsa.pub "$usuario@$host" -p "$puerto"
-    done
-
-}
-
-function accion_09_ver_espacio_disco() {
-    solicitar_hosts
-
-    local opcion
-    opcion=$(dialogo_n_opciones "Selecciona una opción" "'Disco duro'" "SSD")
-    case "$opcion" in
-        'Disco duro')
-            echo "Opción: $opcion"
-            comando=("parallel-ssh" "-i" "${SHORT_OPTS[@]}" "${HOSTS[@]}" "df -h | egrep '/home$'")
-            confirmar_comando "${comando[@]}" ;;
-        SSD)
-            echo "Opción: $opcion"
-            comando=("parallel-ssh" "-i" "${SHORT_OPTS[@]}" "${HOSTS[@]}" "df -h | egrep '/home/hdssd$'")
-            confirmar_comando "${comando[@]}" ;;
-        *) echo "Acción cancelada" ;;
-    esac
-    confirmar_comando "${comando[@]}"
-}
-
-function accion_18_copiar() {
-    solicitar_ruta_local
-    solicitar_ruta_remota
-    solicitar_hosts
-    comando=("parallel-scp" "${LONG_OPTS[@]}" "-r" "${HOSTS[@]}" "$RUTA_LOCAL" "$RUTA_REMOTA")
-    confirmar_comando "${comando[@]}"
-}
-
-# TO-DO: Pendiente de comprobar
-# function accion_19_sincronizar() {
-#     solicitar_ruta_local
-#     solicitar_ruta_remota
-#     solicitar_hosts
-#     comando=("parallel-rsync" "${LONG_OPTS[@]}" "-arv" "${HOSTS[@]}" "$RUTA_LOCAL" "$RUTA_REMOTA")
-#     confirmar_comando "${comando[@]}"
-# }
-
-function accion_20_dar_permisos() {
-    solicitar_usuario_remoto
-    solicitar_ruta_remota
-    solicitar_hosts
-    comando_remoto=$(
-        printf "chown -R %s:%s %q && chmod -R u+rw %q" \
-               "$USUARIO_REMOTO" \
-               "$USUARIO_REMOTO" \
-               "$RUTA_REMOTA" \
-               "$RUTA_REMOTA" \
-        )
-    comando=("parallel-ssh" "${LONG_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto")
-    confirmar_comando "${comando[@]}"
-}
-
-function accion_21_quitar_permisos() {
-    solicitar_usuario_remoto
-    solicitar_ruta_remota
-    solicitar_hosts
-    comando_remoto=$(
-        printf "chown -R %s:%s %q && chmod -R a-rw %q" \
-               "$USUARIO_REMOTO" \
-               "$USUARIO_REMOTO" \
-               "$RUTA_REMOTA" \
-               "$RUTA_REMOTA" \
-        )
-    comando=("parallel-ssh" "${LONG_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto")
-    confirmar_comando "${comando[@]}"
-}
-
-function accion_22_matar_procesos_usuario() {
-    solicitar_usuario_remoto
-    solicitar_hosts
-    comando_remoto=$(printf "killall -u %s" "$USUARIO_REMOTO")
-    comando=("parallel-ssh" "${LONG_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto")
-    confirmar_comando "${comando[@]}"
-}
-
-function accion_03_cambiar_contraseña() {
-    solicitar_usuario_remoto
-    solicitar_password
-    solicitar_hosts
-    comando_remoto=$(
-        printf "echo %s:%s | chpasswd" \
-               "$USUARIO_REMOTO" \
-               "$PASS_USUARIO_REMOTO"
-        )
-    comando=("parallel-ssh" "${LONG_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto")
-    confirmar_comando "${comando[@]}"
-}
-
-function accion_04_opciones_apagado() {
-    solicitar_hosts
-    local opcion
-    opcion=$(dialogo_n_opciones "Selecciona una opción" "Apagar" "Reiniciar")
-    case "$opcion" in
-        Apagar)
-            echo "Opción: $opcion"
-            comando=("parallel-ssh" "-i" "${SHORT_OPTS[@]}" "${HOSTS[@]}" "systemctl poweroff")
-            confirmar_comando "${comando[@]}" ;;
-        Reiniciar)
-            echo "Opción: $opcion"
-            comando=("parallel-ssh" "-i" "${SHORT_OPTS[@]}" "${HOSTS[@]}" "systemctl reboot")
-            confirmar_comando "${comando[@]}" ;;
-        *) echo "Acción cancelada" ;;
-    esac
-}
-
-function accion_99_actualizar_script() {
-    local script_dir
-    script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-    pushd "$script_dir" || exit 1
-    if git diff --exit-code main origin/main > /dev/null; then
-        popd || exit 1
-    else
-        git pull
-        exit 0
-    fi
-    
 }
 
 function main() {
