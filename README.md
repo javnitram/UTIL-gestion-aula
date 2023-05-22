@@ -20,12 +20,12 @@ Establece algunas constantes:
 * *TIMEOUT*: Expirar tiempo de espera pasados este número de segundos. 0 para esperar indefinidamente.
 * *COMMON_OPTS*: Array de cadenas con opciones para pasar a cualquiera de los comandos del paquete pssh que este script usa internamente.
 
-### Mejoras futuras
+## Mejoras futuras
 * Actualmente no se permite incluir este script en el PATH.
 * Verificar parallel-rsync.
 * ¿Habilitar una opción para generar fichero de hosts usando nmap?
 
-### Contribuir
+## Contribuir
 * Asegúrate de tener instaladas las dependencias, así como Vagrant y el entorno de pruebas del repositorio [javnitram/SIST-multi-vm](https://github.com/javnitram/SIST-multi-vm).
 * Haz un fork de este proyecto.
 * Haz una rama de desarrollo de tu funcionalidad (git checkout -b mi-nueva-funcionalidad).
