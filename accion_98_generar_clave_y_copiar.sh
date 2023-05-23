@@ -26,6 +26,6 @@ function accion_98_generar_clave_y_copiar() {
         host=${host/:*/}
         [[ $linea =~ ":" ]] && puerto=${linea##*:}
         puerto=${puerto:-22}
-        ssh-copy-id -i ~/.ssh/id_rsa.pub "$usuario@$host" -p "$puerto"
+        ssh-copy-id -i ~/.ssh/id_rsa.pub -p "$puerto" "$usuario@$host"
     done
 }
