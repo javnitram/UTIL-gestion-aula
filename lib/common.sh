@@ -117,7 +117,6 @@ function dialogo_n_opciones() {
     do
         opciones+=("$i" "")
     done
-    opciones+=("${BTN_CANCELAR}" "")
 
     local nOpciones
     nOpciones=$(altura_opciones_menu "${opciones[@]}")
@@ -194,7 +193,7 @@ function solicitar_cadena() {
     echo "$cadena"
 }
 
-function limpiar_fichero_hosts() {
+function leer_fichero_hosts() {
     grep -v '^\s*#' "$1"
 }
 
@@ -204,15 +203,16 @@ function solicitar_hosts() {
 
     # Identifica el número más bajo de la lista de hosts
     # para calcular los números de opción que propondrá el menú
-    start=$(limpiar_fichero_hosts "$HOSTS_FILE" | sort | head -n 1 | sed 's/.*[^0-9]\(\d*\)/\1/')
+    start=$(leer_fichero_hosts "$HOSTS_FILE" | sort | head -n 1 | sed 's/.*[^0-9]\(\d*\)/\1/')
     start=$((start%1000))
     opciones=("Todos" OFF)
-    for i in $(limpiar_fichero_hosts "$HOSTS_FILE")
+    for i in $(leer_fichero_hosts "$HOSTS_FILE")
     do
         opciones+=("$i" OFF)
     done
     hosts=$(whiptail --title "$(describe_accion "${FUNCNAME[1]}")" --checklist "Elige hosts" --noitem $(altura_menu $nOpciones) ${ANCHO_VENTANA} $nOpciones "${opciones[@]}" 3>&1 1>&2 2>&3)
     hosts="$(tr '\n' ' ' <<< $hosts)"
+    hosts="$(tr '"' ' ' <<< $hosts)"
     hosts=${hosts:-Todos}
     echo "Hosts: $hosts"
     if [[ "$hosts" == ' ' || "$hosts" =~ "Todos" ]]; then

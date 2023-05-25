@@ -6,14 +6,17 @@
 # Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
 ###############################################################################
 
+script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+
 # Importar configuración
-source .config
+source "${script_dir}/.config"
 
 # Importar funciones auxiliares y variables globales
-source common.sh
+source "${script_dir}/lib/common.sh"
 
 # Importar funciones que implementan opciones de menú
-for f in accion_*.sh; do
+for f in "${script_dir}"/acciones/accion_*.sh; do
     source "$f"
 done
 

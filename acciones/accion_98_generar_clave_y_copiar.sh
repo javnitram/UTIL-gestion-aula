@@ -18,7 +18,7 @@ function accion_98_generar_clave_y_copiar() {
 
     ok=true
     if [[ ${HOSTS[0]} == "-h" ]]; then
-        comando="mostrar_hosts_fichero ${HOSTS[1]}"
+        comando="leer_fichero_hosts ${HOSTS[1]}"
     else
         HOSTS[0]=""
         comando="echo ${HOSTS[*]}"
