@@ -11,6 +11,8 @@
     local script_dir
     script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
     cd "$script_dir" || exit 1
+    git stash
     git pull
+    git stash apply
     exit 0   
 }
