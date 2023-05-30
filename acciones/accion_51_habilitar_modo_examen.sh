@@ -56,6 +56,7 @@ function accion_51_habilitar_modo_examen() {
                 USUARIO_REMOTO="$USUARIO_EXAMEN"
                 solicitar_usuario_remoto || return 1
                 USUARIO_EXAMEN="$USUARIO_REMOTO"
+                PASS_USUARIO_REMOTO=""
             fi
             for f in $acciones
             do
@@ -72,5 +73,5 @@ function accion_51_habilitar_modo_examen() {
             done
         fi
     fi
-    dialogo "$(describe_accion "${FUNCNAME[0]}")" "Al finalizar el examen recuerda:\n (1) desbloquear el usuario '$USUARIO_ALUMNO' y \n (2) cambiar la contraseña del usuario '$USUARIO_EXAMEN'"
+    dialogo "$(describe_accion "${FUNCNAME[0]}")" "Al finalizar el examen recuerda:\n (1) desbloquear el usuario '$USUARIO_ALUMNO' y \n (2) cambiar la contraseña del usuario '$USUARIO_EXAMEN'\n\nPara ello, puedes utilizar la acción Deshabilitar modo examen"
 }

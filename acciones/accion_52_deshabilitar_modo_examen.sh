@@ -15,7 +15,7 @@ function accion_52_deshabilitar_modo_examen() {
     declare -a opciones
 
     solicitar_hosts
-
+    
     if dialogo "$(describe_accion "${FUNCNAME[0]}")" "Paso 1 - Volver a permitir el uso del usuario alumnotd/alumnotv"
     then 
         opciones=(accion_24_desbloquear_usuario ON)
@@ -54,6 +54,7 @@ function accion_52_deshabilitar_modo_examen() {
                 USUARIO_REMOTO="$USUARIO_EXAMEN"
                 solicitar_usuario_remoto || return 1
                 USUARIO_EXAMEN="$USUARIO_REMOTO"
+                PASS_USUARIO_REMOTO=""
             fi
             for f in $acciones
             do
