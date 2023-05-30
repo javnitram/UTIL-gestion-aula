@@ -7,9 +7,8 @@
 ###############################################################################
 
 function accion_98_generar_clave_y_copiar() {
-    params=("$(describe_accion "${FUNCNAME[0]}")" "Esta acción debe realizarse una única vez por cada host para que no pida contraseña por SSH para el usuario configurado. ¿Continuar?" "Aceptar") 
-    if dialogo "${params[@]}"; then 
-        solicitar_hosts
+    params=("$(describe_accion "${FUNCNAME[0]}")" "Esta acción debe realizarse una única vez por cada host para que no pida contraseña por SSH para el usuario configurado. ¿Continuar?" "Aceptar") \
+    && if dialogo "${params[@]}"; then 
         local linea
         local usuario
         local host
@@ -18,16 +17,16 @@ function accion_98_generar_clave_y_copiar() {
         local password
         declare -a comando=("return_code=0;")
 
-        if [[ ${HOSTS[0]} == "-h" ]]; then
+        solicitar_hosts \
+        && if [[ ${HOSTS[0]} == "-h" ]]; then
             comando_lista_hosts="leer_fichero_hosts ${HOSTS[1]}"
         else
             HOSTS[0]=""
             comando_lista_hosts="echo ${HOSTS[*]}"
-        fi
-
-        ssh-keygen -t rsa
-        which sshpass >& /dev/null && password=$(dialogo_password_oculto)
-        for linea in $($comando_lista_hosts)
+        fi \
+        && ssh-keygen -t rsa \
+        && which sshpass >& /dev/null && password=$(dialogo_password_oculto) \
+        && for linea in $($comando_lista_hosts)
         do
             usuario=""
             host=""
@@ -43,9 +42,9 @@ function accion_98_generar_clave_y_copiar() {
             else
                 comando+=("ssh-copy-id -i ~/.ssh/id_rsa.pub -p $puerto $usuario@$host || return_code=1;")
             fi            
-        done
-        comando+=('exit $return_code')
-        comando=("bash" "-c" "${comando[*]}")
-        confirmar_comando "${comando[@]}"
+        done \
+        && comando+=('exit $return_code') \
+        && comando=("bash" "-c" "${comando[*]}") \
+        && confirmar_comando "${comando[@]}"
     fi
 }

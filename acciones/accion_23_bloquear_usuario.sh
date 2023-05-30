@@ -7,9 +7,9 @@
 ###############################################################################
 
 function accion_23_bloquear_usuario() {
-    solicitar_usuario_remoto
-    solicitar_hosts
-    comando_remoto=$(printf "usermod -L %s" "$USUARIO_REMOTO")
-    comando=("parallel-ssh" "${LONG_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto")
-    confirmar_comando "${comando[@]}"
+    solicitar_usuario_remoto \
+    && solicitar_hosts \
+    && comando_remoto=$(printf "usermod -L %s" "$USUARIO_REMOTO") \
+    && comando=("parallel-ssh" "${LONG_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto") \
+    && confirmar_comando "${comando[@]}"
 }

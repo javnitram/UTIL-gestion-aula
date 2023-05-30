@@ -7,11 +7,10 @@
 ###############################################################################
 
 function accion_09_ver_espacio_disco() {
-    solicitar_hosts
-
     local opcion
-    opcion=$(dialogo_n_opciones "Selecciona una opción" "Disco duro" "SSD")
-    case "$opcion" in
+    solicitar_hosts \
+    && opcion=$(dialogo_n_opciones "Selecciona una opción" "Disco duro" "SSD") \
+    && case "$opcion" in
         'Disco duro')
             echo "Opción: $opcion"
             comando=("parallel-ssh" "-i" "${SHORT_OPTS[@]}" "${HOSTS[@]}" "df -h | egrep '/home$'")

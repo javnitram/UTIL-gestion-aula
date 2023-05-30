@@ -7,8 +7,8 @@
 ###############################################################################
 
 function accion_999_crear_nueva_opción() {
-    params=("Crear nueva opción" "Cúrratelo un poquito tú también, ¿no?" "Ver cómo") 
-    if dialogo "${params[@]}"; then
+    params=("Crear nueva opción" "Cúrratelo un poquito tú también, ¿no?" "Ver cómo") \
+    && if dialogo "${params[@]}"; then
         firefox "https://github.com/javnitram/UTIL-gestion-aula#contribuir" &
         disown
     else

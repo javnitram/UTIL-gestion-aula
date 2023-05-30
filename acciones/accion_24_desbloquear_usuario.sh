@@ -7,9 +7,9 @@
 ###############################################################################
 
 function accion_24_desbloquear_usuario() {
-    solicitar_usuario_remoto
-    solicitar_hosts
-    comando_remoto=$(printf "usermod -U %s" "$USUARIO_REMOTO")
-    comando=("parallel-ssh" "${LONG_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto")
-    confirmar_comando "${comando[@]}"
+    solicitar_usuario_remoto \
+    && solicitar_hosts \
+    && comando_remoto=$(printf "usermod -U %s" "$USUARIO_REMOTO") \
+    && comando=("parallel-ssh" "${LONG_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto") \
+    && confirmar_comando "${comando[@]}"
 }

@@ -7,9 +7,9 @@
 ###############################################################################
 
 function accion_22_finalizar_procesos_y_sesión_de_usuario() {
-    solicitar_usuario_remoto
-    solicitar_hosts
-    comando_remoto=$(printf "killall -u %s" "$USUARIO_REMOTO")
-    comando=("parallel-ssh" "${LONG_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto")
-    confirmar_comando "${comando[@]}"
+    solicitar_usuario_remoto \
+    && solicitar_hosts \
+    && comando_remoto=$(printf "killall -u %s" "$USUARIO_REMOTO") \
+    && comando=("parallel-ssh" "${LONG_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto") \
+    && confirmar_comando "${comando[@]}"
 }

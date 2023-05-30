@@ -8,17 +8,20 @@
 
 function accion_04_opciones_apagado() {
     local opcion
-    opcion=$(dialogo_n_opciones "Selecciona una opción" "Apagar" "Reiniciar")
-    solicitar_hosts
-    case "$opcion" in
+    opcion=$(dialogo_n_opciones "Selecciona una opción" "Apagar" "Reiniciar") \
+    && solicitar_hosts \
+    && case "$opcion" in
         Apagar)
             echo "Opción: $opcion"
             comando=("parallel-ssh" "-i" "${SHORT_OPTS[@]}" "${HOSTS[@]}" "systemctl poweroff")
-            confirmar_comando "${comando[@]}" ;;
+            confirmar_comando "${comando[@]}"
+            ;;
         Reiniciar)
             echo "Opción: $opcion"
             comando=("parallel-ssh" "-i" "${SHORT_OPTS[@]}" "${HOSTS[@]}" "systemctl reboot")
-            confirmar_comando "${comando[@]}" ;;
-        *) echo "Acción cancelada" ;;
+            confirmar_comando "${comando[@]}"
+            ;;
+        *) echo "Acción cancelada"
+            ;;
     esac
 }
