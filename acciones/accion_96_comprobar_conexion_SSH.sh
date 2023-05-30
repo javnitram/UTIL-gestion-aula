@@ -8,7 +8,7 @@
 
 function accion_96_comprobar_conexión_SSH() {
     solicitar_hosts \
-    && comando_remoto='echo "$(whoami)@$(hostname). Uptime: $(uptime -p). Sesiones abiertas: $(users)' \
+    && comando_remoto='echo "$(whoami)@$(hostname). Uptime: $(uptime -p). Sesiones abiertas: $(users)"' \
     && comando=("parallel-ssh" -i "${SHORT_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto") \
     && confirmar_comando "${comando[@]}"
 }
