@@ -6,9 +6,9 @@
 # Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
 ###############################################################################
 
-function accion_96_comprobar_conexión_SSH() {
+function accion_01_comprobar_conexiones_y_sesiones() {
     solicitar_hosts \
-    && comando_remoto='echo "$(whoami)@$(hostname). Uptime: $(uptime -p). Sesiones abiertas: $(users)"' \
+    && comando_remoto='echo "$(whoami)@$(hostname). Tiempo encendido: $(uptime -p). Sesiones abiertas: $(users)"' \
     && comando=("parallel-ssh" -i "${SHORT_OPTS[@]}" "${HOSTS[@]}" "$comando_remoto") \
     && confirmar_comando "${comando[@]}"
 }
