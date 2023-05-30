@@ -6,7 +6,8 @@
 # Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
 ###############################################################################
 
-function accion_99_actualizar_script() {
+# Sólo se define la función si se es root (no funciona con sudo)
+[ "$EUID" -eq 0 ] && function accion_99_actualizar_script() {
     local script_dir
     script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
     cd "$script_dir" || exit 1

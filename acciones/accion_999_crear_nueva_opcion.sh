@@ -6,7 +6,8 @@
 # Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
 ###############################################################################
 
-function accion_999_crear_nueva_opción() {
+# Sólo se define la función si se es root (no funciona con sudo)
+[ "$EUID" -eq 0 ] && function accion_999_crear_nueva_opción() {
     params=("Crear nueva opción" "Cúrratelo un poquito tú también, ¿no?" "Ver cómo") \
     && if dialogo "${params[@]}"; then
         firefox "https://github.com/javnitram/UTIL-gestion-aula#contribuir" &

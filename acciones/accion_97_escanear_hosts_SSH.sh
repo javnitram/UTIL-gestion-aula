@@ -6,7 +6,8 @@
 # Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
 ###############################################################################
 
-function accion_97_escanear_hosts_SSH() {
+# Sólo se define la función si se es root (no funciona con sudo)
+[ "$EUID" -eq 0 ] && function accion_97_escanear_hosts_SSH() {
     params=("$(describe_accion "${FUNCNAME[0]}")" "Esta acción debe realizarse una única vez por cada host para añadirlo a la lista de hosts conocidos por SSH. ¿Continuar?" "Aceptar") \
     && if dialogo "${params[@]}"; then 
         local linea
