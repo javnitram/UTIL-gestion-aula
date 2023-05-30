@@ -404,10 +404,10 @@ function ejecutar() {
     local funcion
     funcion="$1"
     if "$funcion"; then
-        echo "Acción completada con éxito"
+        echo "Acción '$(describe_accion "$funcion")' completada con éxito"
         confirmar_continuacion_asistente
     elif [[ -d "$TMP_STDERR_DIR" ]]; then
-        echo "Todas las conexiones completadas, hubo uno o varios errores"
+        echo "Acción '$(describe_accion "$funcion")' completada. Todas las conexiones cerradas, hubo uno o varios errores"
         confirmar_continuacion_asistente
         # Esta ruta existe si ha habido errores y el comando se lanzó con opción -e <dir>
         # para redirigir errores a un fichero por cada conexión
@@ -424,7 +424,7 @@ function ejecutar() {
             confirmar_continuacion_asistente
         fi
     else
-        echo "Acción cancelada por el usuario o completada con posibles errores, revisar la traza anterior"
+        echo "Acción '$(describe_accion "$funcion")' cancelada por el usuario o completada con posibles errores, revisar la traza anterior"
         confirmar_continuacion_asistente
     fi
     # Limpiar ficheros temporales

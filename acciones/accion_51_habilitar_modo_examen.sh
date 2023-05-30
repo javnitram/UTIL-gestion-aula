@@ -10,6 +10,8 @@ function accion_51_habilitar_modo_examen() {
     local f
     local acciones
     declare -a opciones
+    local usuario_alumno
+    local usuario_examen
 
     solicitar_hosts
 
@@ -25,6 +27,7 @@ function accion_51_habilitar_modo_examen() {
                 # Sugerir valores por defecto, confirmar con usuario
                 USUARIO_REMOTO="alumnotd"
                 solicitar_usuario_remoto || return 1
+                usuario_alumno="$USUARIO_REMOTO"
             fi
             for f in $acciones
             do
@@ -49,6 +52,7 @@ function accion_51_habilitar_modo_examen() {
                 # Sugerir valor por defecto, confirmar con usuario
                 USUARIO_REMOTO="examen1"
                 solicitar_usuario_remoto || return 1
+                usuario_examen="$USUARIO_REMOTO"
             fi
             for f in $acciones
             do
@@ -65,4 +69,5 @@ function accion_51_habilitar_modo_examen() {
             done
         fi
     fi
+    dialogo "$(describe_accion "${FUNCNAME[0]}")" "Al finalizar el examen recuerda desbloquear el usuario $usuario_alumno y cambiar la contraseña del usuario $usuario_examen"
 }
