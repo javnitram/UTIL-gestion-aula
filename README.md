@@ -2,9 +2,9 @@
 Script(s) de gestión de aula
 
 ## Dependencias
-Requiere instalar:
-* smenu (probado con 0.9.15-1 amd64 en Ubuntu 20.04 con WSL).
-* pssh (probado con 2.3.1-2 all en Ubuntu 20.04 con WSL).
+Requiere que los siguientes paquetes estén instalados:
+* whiptail.
+* pssh.
 
 ## Configuración
 ### Fichero de hosts
@@ -26,16 +26,15 @@ Establece algunas constantes:
 ## Mejoras futuras
 * Actualmente no se permite incluir este script en el PATH.
 * Verificar parallel-rsync.
+* Verificar acción de actualización del script.
 * ¿Habilitar una opción para generar fichero de hosts usando nmap o exportarlo de TCOS?
-* Modo examen como secuencia de acciones ya existentes: bloquear usuario alumno, matar sus procesos, copiar directorio/fichero, dar permisos, cambiar contraseña a usuario examen.
-* Averiguar usuario logueado (comando w)
-* ¿Resetear usuario examen? userdel -r y volver a crearlo con mismo UID y GID originales.
+* ¿Resetear usuario examen? userdel -r y volver a crearlo con mismo home, UID, GID y grupos secundarios que tuvo originalmente.
 
 ## Contribuir
 * Asegúrate de tener instaladas las dependencias, así como Vagrant y el entorno de pruebas del repositorio [javnitram/SIST-multi-vm](https://github.com/javnitram/SIST-multi-vm).
 * Haz un fork de este proyecto.
 * Haz una rama de desarrollo de tu funcionalidad (git checkout -b mi-nueva-funcionalidad).
-* Tu funcionalidad puede utilizar cualquier variable global o función de los ficheros common.sh, .config o cualquier fichero accion_\*.sh
+* Tu funcionalidad puede utilizar cualquier variable global o función de los ficheros common.sh, .config o cualquier fichero accion_\*.sh. Familiarízate con algunas de las acciones ya implementadas.
 * Implementa tu funcionalidad en un nuevo script con prefijo "accion_N_" y extensión ".sh". Dicho fichero deberá contener únicamente una función con prefijo "accion_N_" que siga el mismo patrón que las ya existentes, donde N es un número de uno o dos dígitos que establece el orden de opción en el menú. Si se cumple la nomenclatura, el script gestion-aula.sh mostrará correctamente esta nueva opción en el menú.
 * Los ficheros accion_\*.sh no tienen por qué tener permisos de ejecución, no deben ser invocados de forma aislada.
 * Haz pruebas usando el fichero "hosts-test.txt" con las máquinas virtuales configuradas en javnitram/SIST-multi-vm/Vagrantfile.
