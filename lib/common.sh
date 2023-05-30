@@ -29,6 +29,8 @@ BTN_ACEPTAR="Aceptar"
 BTN_CANCELAR="Cancelar"
 BACK_TITLE="Atrás"
 
+MIN_ALTURA=25
+MIN_ANCHO=80
 ANCHO_VENTANA=78
 ## Set newt color palette for dialogs
 NEWT_COLORS_0='
@@ -93,6 +95,7 @@ NEWT_COLORS_3='
 export NEWT_COLORS=$NEWT_COLORS_1
 
 function dialogo_base() {
+    comprueba_resolucion
     whiptail --ok-button "$BTN_ACEPTAR" --cancel-button "$BTN_CANCELAR" "$@"
 }
 
@@ -120,6 +123,23 @@ function confirmar_continuacion_asistente() {
 
 function fullscreen() {
     stty size
+}
+
+function comprueba_resolucion() {
+    local mensaje
+    declare -a resolucion=($(fullscreen))  
+    while [[ ${resolucion[0]} -lt $MIN_ALTURA || ${resolucion[1]} -lt $MIN_ANCHO ]]; do
+        mensaje="$(cat << EOF
+Resolución actual: $(echo ${resolucion[*]} | tr ' ' 'x') (mínima ${MIN_ALTURA}x${MIN_ANCHO})
+El terminal tiene muy poco tamaño o la fuente es demasiado grande. Maximiza la ventana o reduce el tamaño de la fuente y pulsa ${BTN_ACEPTAR}
+EOF
+)
+"
+        if ! whiptail --title "Error" --yesno "$mensaje" --yes-button "${BTN_ACEPTAR}" --no-button "${BTN_CANCELAR}" "${resolucion[@]}"; then
+            salir 1
+        fi
+        resolucion=($(fullscreen)) 
+    done
 }
 
 function altura_opciones_menu() {
