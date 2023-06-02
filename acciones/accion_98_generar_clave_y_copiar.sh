@@ -7,7 +7,7 @@
 ###############################################################################
 
 # Sólo se define la función si se es root (no funciona con sudo)
-[ "$EUID" -eq 0 ] && function accion_98_generar_clave_y_copiar() {
+[[ "$(id -u)" -eq 0 && -z "$SUDO_USER" ]] && function accion_98_generar_clave_y_copiar() {
     params=("$(describe_accion "${FUNCNAME[0]}")" "Esta acción debe realizarse una única vez por cada host para que no pida contraseña por SSH para el usuario configurado. ¿Continuar?" "Aceptar") \
     && if dialogo "${params[@]}"; then 
         local linea
