@@ -11,10 +11,17 @@
 declare -a SHORT_OPTS=()
 declare -a LONG_OPTS=()
 SHORT_OPTS=("-l" "root" "-t" "$TIMEOUT" "${COMMON_OPTS[@]}")
-TMP_DIR=$(mktemp -d)
-TMP_STDOUT_DIR="${TMP_DIR}/stdout/"
-TMP_STDERR_DIR="${TMP_DIR}/stderr/"
-LONG_OPTS=("${SHORT_OPTS[@]}" "-o" "$TMP_STDOUT_DIR/" "-e" "$TMP_STDERR_DIR/")
+LONG_OPTS=("${SHORT_OPTS[@]}")
+    TMP_DIR=$(mktemp -d)
+    TMP_STDOUT_DIR="${TMP_DIR}/stdout/"
+    TMP_STDERR_DIR="${TMP_DIR}/stderr/"
+if ! which "$SHOW_ERRORS" > /dev/null; then
+    # Configurado como dialogo, se guardan temporalmente algunas salidas
+    LONG_OPTS+=("-o" "$TMP_STDOUT_DIR/" "-e" "$TMP_STDERR_DIR/")
+elif "$SHOW_ERRORS"; then
+    # configurado a true
+    LONG_OPTS+=("-o" "$TMP_STDOUT_DIR/" "-i") # Mostrar errores inmediatamente
+fi
 
 # ... para solicitar (y recordar como predefinidos) valores indicados por el usuario
 declare -a HOSTS=()
@@ -428,11 +435,11 @@ function ejecutar() {
         confirmar_continuacion_asistente
     elif [[ -d "$TMP_STDERR_DIR" ]]; then
         echo "Acción '$(describe_accion "$funcion")' completada. Todas las conexiones cerradas, hubo uno o varios errores"
-        confirmar_continuacion_asistente
+        which "$SHOW_ERRORS" > /dev/null || confirmar_continuacion_asistente
         # Esta ruta existe si ha habido errores y el comando se lanzó con opción -e <dir>
         # para redirigir errores a un fichero por cada conexión
         params=("$(describe_accion "$funcion")" "Hubo uno o varios errores, pueden verse en la traza del terminal\n¿Mostrar?" "Mostrar") 
-        if dialogo "${params[@]}"; then 
+        if "$SHOW_ERRORS" "${params[@]}"; then 
             echo "Detalle de errores:"
             # Mostramos errores, para ello usamos grep que, cuando recibe
             # varios ficheros, identifica en cada línea el nombre del fichero
