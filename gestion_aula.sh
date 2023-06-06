@@ -42,7 +42,7 @@ function main() {
             done
 
             nOpciones=$(altura_opciones_menu "${opciones[@]}")
-            funcion=$(dialogo_base --title "Gestión de puesto del aula" --menu "Elige una acción" --notags $(altura_menu $nOpciones) ${ANCHO_VENTANA} $nOpciones \
+            funcion=$(dialogo_base --title "Gestión de aula (opciones de usuario ${SUDO_USER:-root})" --menu "Elige una acción" --notags $(altura_menu $nOpciones) ${ANCHO_VENTANA} $nOpciones \
                 "${opciones[@]}"  3>&2 2>&1 1>&3)
 
             [[ -z $funcion ]] && exit 0
@@ -57,5 +57,10 @@ function main() {
 
 if [ "${BASH_SOURCE[0]}" -ef "$0" ]; then
     # Están ejecutando directamente este script, no importándolo con source
-    main "$@"
+    if [[ "$(id -u)" -eq 0 ]]; then
+        main "$@"
+    else
+        echo "Ejecuta el script con sudo o como usuario root" >&2
+        exit 255
+    fi
 fi
