@@ -29,7 +29,7 @@ function main() {
     if which whiptail >/dev/null; then
         while true; do
             mapfile -t funciones_opciones < <(declare -F \
-                        | grep "accion_" \
+                        | grep " accion_" \
                         | sed 's/^declare -f//' \
                         | sort -n -t_ -k1 \
                         | tr '\n' ' ')

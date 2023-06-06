@@ -73,5 +73,45 @@ function accion_51_habilitar_modo_examen() {
             done
         fi
     fi
-    dialogo "$(describe_accion "${FUNCNAME[0]}")" "Al finalizar el examen recuerda:\n (1) desbloquear el usuario '$USUARIO_ALUMNO' y \n (2) cambiar la contraseña del usuario '$USUARIO_EXAMEN'\n\nPara ello, puedes utilizar la acción Deshabilitar modo examen"
+
+    if dialogo "$(describe_accion "${FUNCNAME[0]}")" "Paso 3 - Se sugiere que se deshabilite automáticamente el modo examen al reiniciar cada puesto del aula. También se puede utilizar la acción 'Deshabilitar modo examen' desde el menú para hacerlo manualmente en cualquier momento:"
+    then
+        opciones=(_accion_al_reiniciar_deshabilitar_modo_examen ON)
+
+        local nOpciones
+        nOpciones=$(altura_opciones_menu "${opciones[@]}")
+        if acciones=$(dialogo_base --title "$(describe_accion "${FUNCNAME[0]}")" --checklist "Elige acciones" --noitem $(altura_menu $nOpciones) ${ANCHO_VENTANA} $nOpciones "${opciones[@]}" 3>&1 1>&2 2>&3)
+        then
+            for f in $acciones
+            do
+                f="${f//\"/}"
+                if dialogo "$(describe_accion "${FUNCNAME[0]}")" "Siguiente acción '$(describe_accion "$f")', ¿continuar?" "Continuar"; then
+                    ejecutar "$f"
+                fi
+            done
+        fi
+    fi
+}
+
+function _accion_al_reiniciar_deshabilitar_modo_examen() {
+    local script_before_shutdown
+    script_before_shutdown="al_reiniciar_deshabilitar_modo_examen.sh"
+    RUTA_LOCAL="/tmp/$script_before_shutdown"
+    RUTA_REMOTA="/lib/systemd/system-shutdown/$script_before_shutdown"
+    echo "Generando script para ejecución remota al reiniciar/apagar"
+    cat <<- EOF | tee "$RUTA_LOCAL"
+		#!/bin/sh
+		mount -oremount,rw /
+		printf "Desbloquea %s y bloquea %s" "$USUARIO_ALUMNO" "$USUARIO_EXAMEN" > /test
+		usermod -U "$USUARIO_ALUMNO"
+		usermod -L "$USUARIO_EXAMEN"
+		rm -f --preserve-root "$RUTA_REMOTA"
+		mount -oremount,ro /
+EOF
+    echo "Script listo para copiar en hosts"
+    confirmar_continuacion_asistente
+    chmod u+x "$RUTA_LOCAL"
+    ejecutar "accion_18_copiar"
+    RUTA_LOCAL=""
+    RUTA_REMOTA=""
 }
