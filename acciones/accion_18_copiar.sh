@@ -7,7 +7,6 @@
 ###############################################################################
 
 function accion_18_copiar() {
-    LONG_OPTS_PSCP=( "${LONG_OPTS[@]/-i}" )
     solicitar_ruta_local \
     && solicitar_ruta_remota \
     && solicitar_hosts \
