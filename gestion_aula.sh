@@ -6,8 +6,8 @@
 # Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
 ###############################################################################
 
+# Identifica el directorio en el que está el script, independientemente de dónde se ubique
 script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-
 
 # Importar configuración
 source "${script_dir}/.config"
