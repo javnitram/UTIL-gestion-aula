@@ -25,8 +25,8 @@
             HOSTS[0]=""
             comando_lista_hosts="echo ${HOSTS[*]}"
         fi \
-        && ssh-keygen -t rsa \
-        && which sshpass >& /dev/null && password=$(dialogo_password_oculto) \
+        && ssh-keygen -t rsa
+        which sshpass >& /dev/null && password=$(dialogo_password_oculto) \
         && for linea in $($comando_lista_hosts)
         do
             usuario=""
