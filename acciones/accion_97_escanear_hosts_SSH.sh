@@ -31,7 +31,7 @@
             host=${host/:*/}
             [[ $linea =~ ":" ]] && puerto=${linea##*:}
             puerto=${puerto:-22}
-            comando+=("ssh-keyscan -p $puerto -H $host >> ~/.ssh/known_hosts || return_code=1;")
+            comando+=("mkdir ~/.ssh/ >& /dev/null; touch ~/.ssh/known_hosts && ssh-keyscan -p $puerto -H $host >> ~/.ssh/known_hosts || return_code=1;")
         done \
         && comando+=('exit $return_code') \
         && comando=("bash" "-c" "${comando[*]}") \
