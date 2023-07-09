@@ -1,3 +1,4 @@
 [submodule "SIST-multi-vm"]
 	path = SIST-multi-vm
 	url = https://github.com/javnitram/SIST-multi-vm.git
+	branch = aula
