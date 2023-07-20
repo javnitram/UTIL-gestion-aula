@@ -4,8 +4,8 @@ Herramienta de gestión de aula
 
 ## Documentación
 
-[Presentación en HTML](https://javnitram.github.io/UTIL-gestion-aula/)
-[Manual en Markdown](https://github.com/javnitram/UTIL-gestion-aula/blob/gh-pages/README.md)
+* [Presentación en HTML](https://javnitram.github.io/UTIL-gestion-aula/)
+* [Manual en Markdown](https://github.com/javnitram/UTIL-gestion-aula/blob/gh-pages/README.md)
 
 ## Mejoras futuras
 
