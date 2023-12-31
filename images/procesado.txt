@@ -1,0 +1,5 @@
+Instalar paquete imagemagick
+
+convert ryan-basco-wf-pass.jpg -channel RGB -negate ryan-basco-wf-pass_negate.jpg
+
+convert \( ryan-basco-wf-pass_negate.jpg -evaluate multiply 2 \) \( +clone -fill white -colorize 100 \) +swap -alpha off -compose copy_opacity -composite test2.png
